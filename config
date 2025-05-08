@@ -1,0 +1,189 @@
+# Template used to create this container: /system_ext/bin/lindroid-lxc-templates/lxc-lindroid
+# Parameters passed to the template: -f /dev/fd/7
+# For additional config options, please look at lxc.container.conf(5)
+
+# Uncomment the following line to support nesting containers:
+#lxc.include = /system_ext/usr/share/lindroid/lxc/config/nesting.conf
+# (Be aware this has security implications)
+
+lxc.net.0.type = veth
+lxc.net.0.link = lxcbr0
+lxc.net.0.flags = up
+lxc.net.0.hwaddr = 00:16:3e:5a:b8:16
+
+# Ganti rootfs agar pakai dari direktori container ini
+lxc.rootfs.path = dir :/data/lxc/lib/lxc/lindroid/rootfs
+
+lxc.uts.name = default
+# -- static Lindroid configuration begins here --
+# Network configuration
+lxc.net.0.type = none
+
+# Android mounts
+#lxc.mount.entry = /sdcard mnt/sdcard none bind,optional,rw,create=dir
+
+# Allow for 1024 pseudo terminals
+lxc.pty.max = 1024
+
+#Legacy cgroup v1 device allowlist
+lxc.cgroup.devices.deny = a                        # Deny all devices by default
+#lxc.cgroup.devices.allow = c *:* m                 # Allow creation of all character devices
+#lxc.cgroup.devices.allow = b *:* m                 # Allow creation of all block devices
+
+# Common character devices
+lxc.cgroup.devices.allow = c 1:3 rwm               # /dev/null
+lxc.cgroup.devices.allow = c 1:5 rwm               # /dev/zero
+lxc.cgroup.devices.allow = c 1:7 rwm               # /dev/full
+lxc.cgroup.devices.allow = c 1:8 rwm               # /dev/random
+lxc.cgroup.devices.allow = c 1:9 rwm               # /dev/urandom
+lxc.cgroup.devices.allow = c 5:0 rwm               # /dev/tty
+lxc.cgroup.devices.allow = c 5:1 rwm               # /dev/console
+lxc.cgroup.devices.allow = c 5:2 rwm               # /dev/ptmx
+lxc.cgroup.devices.allow = c 136:* rwm             # /dev/pts/*
+
+# Android-specific character devices
+lxc.cgroup.devices.allow = c 10:54 rwm             # /dev/vndbinder
+lxc.cgroup.devices.allow = c 10:55 rwm             # /dev/hwbinder
+lxc.cgroup.devices.allow = c 10:56 rwm             # /dev/binder
+lxc.cgroup.devices.allow = c 10:57 rwm             # /dev/ashmem
+lxc.cgroup.devices.allow = c 10:62 rwm             # /dev/ion
+lxc.cgroup.devices.allow = c 13:* rwm                #/dev/input
+lxc.cgroup.devices.allow = c 199:* rwm             #/dev/kgsl gpu
+lxc.cgroup.devices.allow = c 237:0 rwm             # /dev/kgsl-3d0 (GPU Adreno)
+lxc.cgroup.devices.allow = c 253:0 rwm             # /dev/pmsg0 (Android persistent log)
+lxc.cgroup.devices.allow = c 512:0 rwm
+lxc.cgroup.devices.allow = c 237:* rwm
+
+# Optional (used in some containers)
+lxc.cgroup.devices.allow = c 10:229 rwm            # /dev/fuse
+lxc.cgroup.devices.allow = c 10:200 rwm            # Default docker group device
+
+# #Unified cgroup v2 device allowlist
+lxc.cgroup2.devices.deny = a                       # Deny all devices by default
+lxc.cgroup2.devices.allow = c *:* m                # Allow creation of all character devices
+lxc.cgroup2.devices.allow = b *:* m                # Allow creation of all block devices
+
+# Common character devices
+lxc.cgroup2.devices.allow = c 1:3 rwm              # /dev/null
+lxc.cgroup2.devices.allow = c 1:5 rwm              # /dev/zero
+lxc.cgroup2.devices.allow = c 1:7 rwm              # /dev/full
+lxc.cgroup2.devices.allow = c 1:8 rwm              # /dev/random
+lxc.cgroup2.devices.allow = c 1:9 rwm              # /dev/urandom
+lxc.cgroup2.devices.allow = c 29:* rwm             #/framebuffer
+lxc.cgroup2.devices.allow = c 5:0 rwm              # /dev/tty
+lxc.cgroup2.devices.allow = c 5:1 rwm              # /dev/console
+lxc.cgroup2.devices.allow = c 5:2 rwm              # /dev/ptmx
+lxc.cgroup2.devices.allow = c 136:* rwm            # /dev/pts/*
+lxc.cgroup2.devices.allow = c 10:229 rwm
+
+# Android-specific character devices
+lxc.cgroup2.devices.allow = c 10:54 rwm            # /dev/vndbinder
+lxc.cgroup2.devices.allow = c 10:55 rwm            # /dev/hwbinder
+lxc.cgroup2.devices.allow = c 10:56 rwm            # /dev/binder
+lxc.cgroup2.devices.allow = c 10:57 rwm            # /dev/ashmem
+lxc.cgroup2.devices.allow = c 10:62 rwm            # /dev/ion
+lxc.cgroup2.devices.allow = c 13:* rwm                #/dev/input
+lxc.cgroup2.devices.allow = c 199:* rwm             #/dev/kgsl gpu
+lxc.cgroup2.devices.allow = c 237:0 rwm            # /dev/kgsl-3d0
+lxc.cgroup2.devices.allow = c 253:0 rwm            # /dev/pmsg0
+
+# Optional (used in some containers)
+lxc.cgroup2.devices.allow = c 10:229 rwm           # /dev/fuse
+lxc.cgroup2.devices.allow = c 226:* rwm            # /dev/dri/* (DRM / GPU access)
+lxc.cgroup2.devices.allow = c 10:200 rwm           # Default docker group device
+
+#Binder devices (cgroup v2)
+lxc.cgroup2.devices.allow = c 10:56 rwm
+lxc.cgroup2.devices.allow = c 10:60 rwm
+lxc.cgroup2.devices.allow = c 511:0 rwm
+lxc.cgroup2.devices.allow = c 512:0 rwm
+
+
+# Extra allow rule
+lxc.cgroup.devices.allow = c 10:200 rwmv
+
+lxc.environment = CGROUP_MANAGER=systemd
+lxc.environment = PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+lxc.environment = TMPDIR=/data/local/tmp
+
+# Wayland dan sesi KDE
+lxc.environment = HYBRIS_EGLPLATFORM=wayland
+lxc.environment = EGL_PLATFORM=wayland
+#lxc.environment = HYBRIS_EGLPLATFORM_DIR=/vendor/lib64/egl
+
+# Gunakan ini jika EGL override dibutuhkan
+lxc.environment = HYBRIS_EGLPLATFORM_DIR=/system_ext/lib64
+
+# Wayland dan sesi KDE
+lxc.environment = WAYLAND_DISPLAY=wayland-0
+lxc.environment = XDG_RUNTIME_DIR=/tmp/runtime-lindroid
+lxc.environment = XDG_SESSION_TYPE=wayland
+
+# KWin dengan backend libhybris composer
+lxc.environment = KWIN_COMPOSITOR=ndk
+lxc.environment = KWIN_COMPOSER_PATH=/system_ext/lib64/vendor.lindroid.composer-ndk.so
+lxc.environment = COMPOSER_LIB_PATH=/system_ext/lib64/vendor.lindroid.composer-ndk.so
+
+# Jangan gunakan KWIN_PLATFORM=drm atau KWIN_DRM_DEVICE karena kita pakai hwcomposer
+lxc.environment = KWIN_PLATFORM=wayland
+lxc.environment = KWIN_DRM_DEVICES=/dev/kgsl-3d0
+
+# Qt dan logging
+lxc.environment = QT_QPA_PLATFORM=wayland
+lxc.environment = QT_LOGGING_RULES=kwin.*=true
+
+# Library path untuk Android (khusus HAL & libhybris, bukan desktop)
+lxc.environment = HYBRIS_LD_LIBRARY_PATH=/system/lib64:/system/product/lib64:/system_ext/lib64:/vendor/lib64:/apex/com.android.runtime/lib64
+lxc.environment = HYBRIS_LD_PRELOAD=libhybris.so
+lxc.environment = HYBRIS_LINKER=ld-android.so
+
+# Untuk menjalankan HAL Android (misal composer)
+# Gunakan LD_LIBRARY_PATH minimal + lib dari Debian
+#lxc.environment = LD_LIBRARY_PATH=/system/lib64:/system_ext/lib64:/vendor/lib64:/apex/com.android.runtime/lib64
+
+lxc.mount.entry = cgroup2 /sys/fs/cgroup cgroup2 defaults 0 0
+#lxc.mount.auto = proc:mixed sys:mixed
+lxc.mount.entry = /sys/fs/fuse/connections sys/fs/fuse/connections none bind,optional 0 0
+
+#lxc.mount.entry = /proc proc none bind,optional,ro,create=dir
+lxc.mount.entry = /proc proc none bind,optional,rw,create=dir
+lxc.mount.entry = /tmp tmp none bind,optional,rw,create=dir
+lxc.mount.entry = /vendor vendor none bind,optional,rw,create=dir
+lxc.mount.entry = /vendor_dlkm vendor_dlkm none bind,optional,rw,create=dir
+lxc.mount.entry = /system system none bind,optional,rw,create=dir
+lxc.mount.entry = /system_dlkm system_dlkm none bind,optional,rw,create=dir
+lxc.mount.entry = /system_ext system_ext none bind,optional,rw,create=dir
+lxc.mount.entry = /product product none bind,optional,rw,create=dir
+lxc.mount.entry = /odm odm none bind,optional,rw,create=dir
+lxc.mount.entry = /odm_dlkm odm_dlkm none bind,optional,rw,create=dir
+lxc.mount.entry = /apex apex none rbind,optional,rw,create=dir
+#lxc.mount.entry = /linkerconfig linkerconfig none rbind,optional,rw,create=dir TODO enabling this breaks finding system libs, disabling this breaks finding apex libs...
+
+lxc.mount.entry = /dev/socket dev/socket none bind,optional,rw,create=dir
+lxc.mount.entry = /dev/__properties__ dev/__properties__ none bind,optional,rw,create=dir
+lxc.mount.entry = /dev/binder dev/binder none bind,optional,rw,create=file
+lxc.mount.entry = /dev/hwbinder dev/hwbinder none bind,optional,rw,create=file
+lxc.mount.entry = /dev/vndbinder dev/vndbinder none bind,optional,rw,create=file
+lxc.mount.entry = /dev/pmsg0 dev/pmsg0 none bind,optional,rw,create=file
+lxc.mount.entry = /dev/ashmem dev/ashmem none bind,optional,rw,create=file
+lxc.mount.entry = /dev/ion dev/ion none bind,optional,rw,create=file
+lxc.mount.entry = /dev/input dev/input none rbind,optional,rw,create=dir
+#lxc.mount.entry = selinuxfs sys/fs/selinux selinuxfs optional 0 0
+lxc.mount.entry = /dev/binderfs dev/binderfs bind bind,create=dir,optional 0 0
+lxc.mount.entry = /dev/dri dev/dri none bind,optional,rw,create=dir
+lxc.mount.entry = /dev/dri/renderD128 dev/dri/renderD128 none bind,optional,rw,create=file
+lxc.mount.entry = /dev/socket dev/socket none bind,optional,create=dir
+
+# Hack, bind mount patched libc inside container to avoid errors
+lxc.mount.entry = /system_ext/usr/share/lindroid/libc.so apex/com.android.runtime/lib64/bionic/libc.so none bind,optional,ro,create=file
+
+# Sockets dir
+lxc.mount.entry = /data/lindroid/mnt lindroid bind bind,create=dir
+
+#policy seccomp
+#lxc.seccomp.profile = /data/lindroid/lxc allow-all.seccomp
+
+# GPU devices
+lxc.mount.entry = /dev/kgsl-3d0 dev/kgsl-3d0 none bind,optional,create=file
+#lxc.mount.entry = /dev/mali0 dev/mali0 none bind,optional,create=file
+# -- static Lindroid configuration ends here --

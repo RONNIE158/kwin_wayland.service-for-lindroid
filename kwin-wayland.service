@@ -1,0 +1,29 @@
+[Unit]
+Description=KWin for Wayland
+Requires=runtime-dir.service
+After=runtime-dir.service
+After=graphical.target
+Requires=graphical.target
+
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/kwin_wayland --hwcomposer
+Environment=QT_QPA_PLATFORM=wayland
+Environment=KWIN_DRM_DEVICES=/dev/kgsl-3d0
+Environment=KWIN_COMPOSITOR=ndk
+Environment=KWIN_PLATFORM=wayland
+Environment=EGL_PLATFORM=wayland
+Environment=WAYLAND_DISPLAY=wayland-0
+Environment=XDG_SESSION_TYPE=wayland
+Environment=XDG_RUNTIME_DIR=/tmp/runtime-lindroid
+Environment=QT_LOGGING_RULES=kwin.*=true
+Environment=KWIN_BACKEND=wayland
+Restart=always
+User=lindroid
+Group=lindroid
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=graphical.target

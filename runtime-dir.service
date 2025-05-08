@@ -1,0 +1,14 @@
+[Unit]
+Description=Prepare XDG_RUNTIME_DIR
+After=systemd-user-sessions.service systemd-logind.service
+Before=kwin-wayland.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/mkdir -p /tmp/runtime-lindroid
+ExecStartPost=/bin/chmod 700 /tmp/runtime-lindroid
+ExecStartPost=/bin/chown lindroid:lindroid /tmp/runtime-lindroid
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
